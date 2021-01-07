@@ -74,7 +74,9 @@ void summary(struct student* students){
 
 void deallocate(struct student* stud){
      /*Deallocate memory from stud*/
-
+     if (stud == NULL) {
+          return;
+     }
      free(stud);
      stud = NULL;
 }
