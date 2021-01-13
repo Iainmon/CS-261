@@ -6,6 +6,9 @@
  
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+
+#define prelude srand(time(0));
 
 void swap(int* x, int* y) {
     int temp = *x;
@@ -14,7 +17,7 @@ void swap(int* x, int* y) {
 }
 
 void sort(int* number, int n){
-     /*Sort the array of integeres of length n*/     
+    /*Sort the array of integeres of length n*/     
     int i, j, swapped;
     for (i = 0; i < n-1; i += 1) {
         swapped = 0;
@@ -33,6 +36,7 @@ void sort(int* number, int n){
 
 
 int main(){
+    prelude;
     /*Declare an integer n and assign it a value of 20.*/
     int n;
     n = 20;

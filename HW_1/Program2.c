@@ -7,6 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
+
+#define prelude srand(time(0));
 
 #define STUDENT_COUNT 10
 
@@ -82,22 +85,24 @@ void deallocate(struct student* stud){
 }
 
 int main(){
-    struct student* stud = NULL;
-    
-    /*call allocate*/
-    stud = allocate();
+     prelude;
 
-    /*call generate*/
-    generate(stud);
+     struct student* stud = NULL;
     
-    /*call output*/
-    output(stud);
+     /*call allocate*/
+     stud = allocate();
 
-    /*call summary*/
-    summary(stud);
-    
-    /*call deallocate*/
-    deallocate(stud);
+     /*call generate*/
+     generate(stud);
 
-    return 0;
+     /*call output*/
+     output(stud);
+
+     /*call summary*/
+     summary(stud);
+
+     /*call deallocate*/
+     deallocate(stud);
+
+     return 0;
 }

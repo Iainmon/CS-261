@@ -6,6 +6,7 @@
  
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 int foo(int* a, int* b, int c){
     /* Increment a */
@@ -21,15 +22,18 @@ int foo(int* a, int* b, int c){
     return c;
 }
 
-#define random(from) rand()%from
+#define random_inclusive(from) rand()%(from+1)
 #define RANDOM_UPPER_BOUND 10
+#define prelude srand(time(0));
 
 int main(){
+    prelude;
+
     /* Declare three integers x,y and z and initialize them randomly to values in [0,10] */
     int x, y, z;
-    x = random(RANDOM_UPPER_BOUND);
-    y = random(RANDOM_UPPER_BOUND);
-    z = random(RANDOM_UPPER_BOUND);
+    x = random_inclusive(RANDOM_UPPER_BOUND);
+    y = random_inclusive(RANDOM_UPPER_BOUND);
+    z = random_inclusive(RANDOM_UPPER_BOUND);
 
     /* Print the values of x, y and z */
     printf("x: %i, y: %i, z: %i\n", x, y, z);

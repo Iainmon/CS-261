@@ -6,6 +6,9 @@
  
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+
+#define prelude srand(time(0));
 
 struct student{
 	char initials[2];
@@ -56,6 +59,7 @@ void sort(struct student* students, int n){
 }
 
 int main(){
+    prelude;
     /*Declare an integer n and assign it a value.*/
     int n;
     n = 20;
