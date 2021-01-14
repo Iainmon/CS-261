@@ -1,15 +1,16 @@
 /* CS261- HW1 - Program2.c*/
 /* Name: Iain Moncrief
  * Date: January 6, 2021
- * Solution description: 
  */
  
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <time.h>
 
-#define prelude srand(time(0));
+/* Defines the range of possible scores.
+   The functions I implemented will generalize to any score range greater than 0 */
+#define HIGHEST_SCORE 100
+#define LOWEST_SCORE 0
 
 #define STUDENT_COUNT 10
 
@@ -36,7 +37,7 @@ void generate(struct student* students){
           students[i].initials[0] = 'A' + rand() % 26;
           students[i].initials[1] = 'A' + rand() % 26;
 
-          students[i].score = rand() % 101;
+          students[i].score = rand() % (HIGHEST_SCORE - LOWEST_SCORE + 1) + LOWEST_SCORE;
      }
 }
 
@@ -55,12 +56,15 @@ void output(struct student* students){
 void summary(struct student* students){
      /*Compute and print the minimum, maximum and average scores of the ten students*/
 
-     int min, max = 0;
+     int min, max; 
+     /* Correctly initializes the max and min values for searching to work properly */
+     min = HIGHEST_SCORE; max = LOWEST_SCORE;
      int total, i, curr;
      total = 0;
      for (i = 0; i < STUDENT_COUNT; i += 1) {
+          /* Sums up the array, keeps track of the max and min values */
           curr = students[i].score;
-          total += curr;
+          total += curr - LOWEST_SCORE;
           if (curr < min) {
                min = curr;
                continue;
@@ -72,7 +76,7 @@ void summary(struct student* students){
      int average;
      average = (float)(total) / (float)(STUDENT_COUNT);
 
-     printf("min: %i, max: %i, average: %i \n", min, max, average);
+     printf("min: %d, max: %d, average: %d \n", min, max, average + LOWEST_SCORE);
 }
 
 void deallocate(struct student* stud){
@@ -85,7 +89,8 @@ void deallocate(struct student* stud){
 }
 
 int main(){
-     prelude;
+     /* Seeds the random function */
+     srand(time(0));
 
      struct student* stud = NULL;
     

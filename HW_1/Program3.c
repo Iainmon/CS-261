@@ -1,15 +1,13 @@
 /* CS261- HW1 - Program3.c*/
 /* Name: Iain Moncrief
  * Date: January 7, 2021
- * Solution description:
  */
  
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
-#define prelude srand(time(0));
-
+/* Swap function for integers */
 void swap(int* x, int* y) {
     int temp = *x;
     *x = *y;
@@ -17,7 +15,9 @@ void swap(int* x, int* y) {
 }
 
 void sort(int* number, int n){
-    /*Sort the array of integeres of length n*/     
+    /*Sort the array of integers of length n*/     
+    
+    /* Bubble sort implementation */
     int i, j, swapped;
     for (i = 0; i < n-1; i += 1) {
         swapped = 0;
@@ -36,7 +36,9 @@ void sort(int* number, int n){
 
 
 int main(){
-    prelude;
+    /* Seeds the random function */
+    srand(time(0));
+
     /*Declare an integer n and assign it a value of 20.*/
     int n;
     n = 20;
