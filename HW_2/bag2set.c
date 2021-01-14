@@ -3,7 +3,50 @@
 #include <stdlib.h>
 #include <string.h>
 #include "dynArray.h"
+// #include "dynArray.c"
+#include <stdbool.h>
 
+struct List {
+    TYPE value;
+    struct List* tail;
+};
+
+struct List* init() {
+    return malloc(sizeof(struct List));
+}
+struct List* caboose(struct List* lis) {
+    if (lis == NULL) return NULL;
+    struct List* curr;
+    curr = lis;
+    while (curr->tail != NULL) {
+        curr = curr->tail;
+    }
+    return curr;
+}
+struct List* append(struct List* lis, TYPE val) {
+    struct List* next;
+    next = init();
+    next->value = val;
+    if (lis == NULL) {
+        lis = next;
+    } else {
+        struct List* back;
+        back = caboose(lis);
+        back->tail = next;
+    }
+    return lis;
+}
+bool has(struct List* lis, TYPE val) {
+    struct List* curr;
+    curr = lis;
+    while (curr != NULL) {
+        if (curr->value == val) {
+            return true;
+        }
+        curr = curr->tail;
+    }
+    return false;
+} 
 
 /* Converts the input bag into a set using dynamic arrays 
 	param: 	da -- pointer to a bag 	
@@ -14,7 +57,31 @@ void bag2set(struct DynArr *da)
 {
     
 
-     /* FIX ME */
+    /* FIX ME */
+    struct List* uniques;
+    uniques = NULL;
+    {
+        TYPE curr;
+        int i; i = 0;
+        while (i < da->size) {
+            curr = getDynArr(da, i);
+            if (!has(uniques, curr)) {
+                uniques = append(uniques, curr);
+            }
+            ++i;
+        }
+    }
+
+    freeDynArr(da);
+
+    {
+        struct List* curr;
+        curr = uniques;
+        while (curr != NULL) {
+            addDynArr(da, curr->value);
+            curr = curr->tail;
+        }
+    }
 
 }
 

@@ -14,3 +14,4 @@ clean:
 
 cleanall: clean
 	rm *.o
+	rm prog
