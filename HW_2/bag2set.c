@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "dynArray.h"
-// #include "dynArray.c"
 #include <stdbool.h>
 
 struct List {
@@ -56,10 +55,9 @@ bool has(struct List* lis, TYPE val) {
 void bag2set(struct DynArr *da)
 {
     
-
-    /* FIX ME */
     struct List* uniques;
     uniques = NULL;
+    int count; count = 0;
     {
         TYPE curr;
         int i; i = 0;
@@ -67,12 +65,14 @@ void bag2set(struct DynArr *da)
             curr = getDynArr(da, i);
             if (!has(uniques, curr)) {
                 uniques = append(uniques, curr);
+                ++count;
             }
             ++i;
         }
     }
 
     freeDynArr(da);
+    _dynArrSetCapacity(da, count);
 
     {
         struct List* curr;

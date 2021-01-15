@@ -84,6 +84,18 @@ void deleteDynArr(DynArr *v)
 void _dynArrSetCapacity(DynArr *v, int newCap)
 {
 	/* FIXME: You will write this function */
+	assert(newCap >= v->capacity);
+	TYPE* old;
+	old = v->data;
+	v->data = (TYPE *) malloc(sizeof(TYPE) * newCap);
+	assert(v->data != NULL);
+	v->capacity = newCap;
+	int i; i = 0;
+	while (i < v->size) {
+		v->data[i] = old[i];
+		++i;
+	}
+	free(old);
 }
 
 /* Get the size of the dynamic array
@@ -112,7 +124,7 @@ void addDynArr(DynArr *v, TYPE val)
 	/* FIXME: You will write this function */
 
 	if (v->size >= v->capacity)
-		_dynArrSetCapacity(v,v->size*2);
+		_dynArrSetCapacity(v, v->size + 1 * 2);
 
 	v->data[v->size] = val;
 	v->size++;
@@ -186,6 +198,13 @@ void swapDynArr(DynArr *v, int i, int  j)
 void removeAtDynArr(DynArr *v, int idx)
 {
 	/* FIXME: You will write this function */
+	int i;
+	i = idx;
+	while (i < v->size - 1) {
+		v->data[i] = v->data[i + 1];
+		i++;
+	}
+	v->size--;
 }
 
 /* ************************************************************************
@@ -288,4 +307,12 @@ int containsDynArr(DynArr *v, TYPE val)
 void removeDynArr(DynArr *v, TYPE val)
 {
 	/* FIXME: You will write this function */	
+	int i;
+	i = 0;
+	while (i < v->size) {
+		if (v->data[i] == val) {
+			removeAtDynArr(v, i);
+			return;
+		}
+	}
 }

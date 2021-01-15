@@ -25,6 +25,21 @@ char nextChar(char* s)
 		return c;
 }
 
+int isBracket(char c) {
+	return (c == '{') | (c == '(') | (c == '[') | (c == '}') | (c == ')') | (c == ']');
+}
+int isOpening(char c) {
+	return (c == '{') | (c == '(') | (c == '[');
+}
+char antiBracket(char c) {
+	switch (c) {
+		case '{': return '}';
+		case '(': return ')';
+		case '[': return ']';
+		default: return 0x0;
+	}
+}
+
 /* Checks whether any occurrence of (, {, or [ are balanced 
    with the corresponding ), }, or ] respecting the LIFO principle
 	arguments: s pointer to an input string 	
@@ -47,19 +62,31 @@ int isBalanced(char* s)
 		{
 			ch = nextChar(s); /*get the next character in the string*/
 			
-                        /*stop the while loop when we reach the end of the string*/
+            /*stop the while loop when we reach the end of the string*/
 			if(ch==0 || ch=='\0') break;
-				 
- 
-                        /* FIXME: You will write this part of the function */
-
+			
+			/* FIXME: You will write this part of the function */
+			if (isOpening(ch)) {
+				pushDynArr(stack, antiBracket(ch));
+				continue;
+			}
+			if (isBracket(ch)) {
+				if (stack->size < 1) {
+					stack->size = 1;
+					break;
+				}
+				if (topDynArr(stack) == ch) {
+					popDynArr(stack);
+				} else {
+					break; /* {( }) <- case */
+				}
+			}
 		}
-
-
-        /* Free the memory allocated to the stack, and return b=1 or b=0 */
-
+    /* Free the memory allocated to the stack, and return b=1 or b=0 */
 	/* FIXME: You will write this part of the function */
-
+	if (stack->size > 0) b = 0;
+	deleteDynArr(stack);
+	return b;
 }
 
 int main(int argc, char* argv[]){
