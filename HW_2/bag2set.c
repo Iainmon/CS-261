@@ -113,6 +113,8 @@ int main(int argc, char* argv[]){
           printf("%g ", da.data[i]);
         }
         printf("\n");
+    
+    freeDynArr(&da);
         
 	return 0;	
 }

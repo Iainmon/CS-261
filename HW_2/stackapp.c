@@ -91,16 +91,15 @@ int isBalanced(char* s)
 
 int main(int argc, char* argv[]){
 
-	char* s=argv[1];	
-	/*
+	/*char* s=argv[1];	*/
+	
 	char s[]="()+x+r*{{{((--{{[()[]]}}))}}}";	
-	*/
 
 	int res;
 
 	printf("Assignment 2\n");
 	
-	if(argc==2)
+	if(argc!=2)
 	{
 		res = isBalanced(s);
 

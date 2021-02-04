@@ -77,6 +77,22 @@ void print_ll(struct {int value; void* next;} *ll) {
     }
 }
 
+void circularize_dll(Node *ll) {
+    assert(ll != NULL);
+    Node* head;
+    Node* back;
+    head = ll;
+    while (ll != NULL) {
+        back = ll;
+        ll = ll->next;
+        if (back == head) {
+            return; /* This list is already circularized. */
+        }
+    }
+    head->prev = back;
+    back->next = head;
+}
+
 int main() {
     Node* ll;
     ll = make_dll();
