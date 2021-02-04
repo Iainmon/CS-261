@@ -288,9 +288,11 @@ int containsDynArr(DynArr *v, TYPE val)
 	int i;
 	assert((v!=NULL));
 
-	for(i=0;i<v->size;i++)
-		if(v->data[i]==val)
+	for(i=0;i<v->size;i++) {
+		if(EQ(v->data[i],val)) {
 			return i;
+		}
+	}
 	return -1;
 }
 
@@ -310,7 +312,7 @@ void removeDynArr(DynArr *v, TYPE val)
 	int i;
 	i = 0;
 	while (i < v->size) {
-		if (v->data[i] == val) {
+		if (EQ(v->data[i], val)) {
 			removeAtDynArr(v, i);
 			return;
 		}

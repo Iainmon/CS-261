@@ -50,7 +50,13 @@ int isBalanced(char* s)
 {
 	/*Use the following variables, do not change their names*/
 	char ch;  /*stores the current character from the input string*/
-	char ts;  /*stores the top element of the stack*/
+	
+	/*
+	Professor Sinisa said we didn't need this if we don't use it.
+	I am commenting it out because it causes a warning.
+	*/
+	/* char ts; */  /*stores the top element of the stack*/
+	
 	int b=1;  /*Boolean variable b=1 means balanced; b=0 means unbalanced string*/
 
 	DynArr *stack;
