@@ -1,0 +1,8 @@
+curr = first link in queue (q->frontSentinel)
+for every link in the queue do
+    break if curr == NULL
+    next = curr->next, keep track of the next link
+    free(curr), free the memory of the current link
+    curr = next, step through the list
+end
+finally, free the DList struct with free(q)
