@@ -27,6 +27,7 @@
         "bitset": "cpp",
         "__config": "cpp",
         "__debug": "cpp",
-        "version": "cpp"
+        "version": "cpp",
+        "hashmap.h": "c"
     }
 }

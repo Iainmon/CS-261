@@ -21,8 +21,11 @@ char* getWord(FILE *file); /* prototype */
 int main (int argc, const char * argv[]) {
     /*Write this function*/
 	FILE *fp;
+	struct hashMap* ht;
 	fp = fopen("./input.txt", "r");
 	assert(fp != NULL);
+	ht = (struct hashMap*)malloc(sizeof(struct hashMap));
+	initMap(ht, 7);
 	while (1) {
 		char* word;
 		word = getWord(fp);
@@ -31,7 +34,30 @@ int main (int argc, const char * argv[]) {
 			break;
 		}
 		printf("Word: %s\n", word);
-		free(word);
+		{
+			struct hashLink* pair;
+			pair = link_by_key(ht, word);
+			if (pair == NULL) {
+				insertMap(ht, word, 0);
+			} else {
+				pair->value++;
+			}
+		}
+	}
+
+	{
+		int i; i = 0;
+		while (i < ht->tableSize)
+		{
+			struct hashLink* curr;
+			curr = ht->table[i];
+			while (curr != NULL)
+			{
+				printf("%s:%d\n", curr->key, curr->value);
+				curr = curr->next;
+			}
+			++i;
+		}
 	}
 }
 

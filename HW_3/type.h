@@ -19,7 +19,8 @@
 # endif
 
 # ifndef EQ
-# define EQ(A, B) ((A) == (B))
+# define EQ(A, B) strcmp(A,B)
+/*((A) == (B))*/
 # endif
 
 

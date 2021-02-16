@@ -103,4 +103,6 @@ int emptyBuckets(struct hashMap *ht);
  */
 float tableLoad(struct hashMap *ht);
 
+struct hashLink* link_by_key(struct hashMap * ht, KeyType k);
+
 # endif
