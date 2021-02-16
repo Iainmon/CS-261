@@ -22,7 +22,8 @@ int main (int argc, const char * argv[]) {
     /*Write this function*/
 	FILE *fp;
 	struct hashMap* ht;
-	fp = fopen("./input.txt", "r");
+	assert(argc > 1);
+	fp = fopen(argv[1]/* "./input.txt" */, "r");
 	assert(fp != NULL);
 	ht = (struct hashMap*)malloc(sizeof(struct hashMap));
 	initMap(ht, 7);
@@ -55,7 +56,7 @@ int main (int argc, const char * argv[]) {
 			curr = ht->table[i];
 			while (curr != NULL)
 			{
-				printf("%s:%d\n", curr->key, curr->value);
+				printf("%s: %d\n", curr->key, curr->value);
 				curr = curr->next;
 			}
 			++i;

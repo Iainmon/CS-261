@@ -114,21 +114,6 @@ ValueType* atMap (struct hashMap * ht, KeyType k)
 
 int containsKey (struct hashMap * ht, KeyType k)
 {  /*write this*/
-	/* assert(ht != NULL);
-	hashLink* bkt;
-	bkt = ht->table[hash(k) % ht->tableSize];
-	if (bkt == NULL) { return 0; }
-	{
-		hashLink* curr;
-		curr = bkt;
-		while (curr != NULL) {
-			if (EQ(curr->key, k)) {
-				return 1;
-			}
-			curr = curr->next;
-		}
-	}
-	return 0; */
 	hashLink* lnk;
 	assert(ht != NULL);
 	lnk = link_by_key(ht, k);
@@ -141,18 +126,34 @@ void removeKey (struct hashMap * ht, KeyType k)
 	hashLink* lnk;
 	assert(ht != NULL);
 	assert(ht->count > 0);
-	lnk = link_by_key(ht, k);
-	if (lnk == NULL) { return; }
+	{
+		lnk = link_by_key(ht, k);
+		if (lnk == NULL) { return; }
+	}
 	{
 		hashLink* bkt;
-		bkt = ht->table[hash(k) % ht->tableSize];
+		int idx;
+		idx = hash(k) % ht->tableSize;
+		bkt = ht->table[idx];
 		if (bkt == NULL) { return; }
+		if (bkt == lnk)
+		{
+			ht->table[idx] = lnk->next;
+			free(lnk);
+			ht->count--;
+			return;
+		}
 		{
 			hashLink* curr;
 			curr = bkt;
-			while (curr != NULL) {
-				if (EQ(curr->key, k)) {
-					/*Remove key*/
+			while (curr != NULL)
+			{
+				if (curr->next == lnk)
+				{
+					curr->next = lnk->next;
+					free(lnk);
+					ht->count--;
+					return;
 				}
 				curr = curr->next;
 			}
