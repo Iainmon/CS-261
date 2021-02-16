@@ -33,15 +33,17 @@ int main (int argc, const char * argv[]) {
 			fclose(fp);
 			break;
 		}
-		printf("Word: %s\n", word);
+		/*printf("Word: %s\n", word);*/
 		{
 			struct hashLink* pair;
 			pair = link_by_key(ht, word);
 			if (pair == NULL) {
-				insertMap(ht, word, 0);
+				insertMap(ht, word, 1);
 			} else {
 				pair->value++;
 			}
+			pair = link_by_key(ht, word);
+			/*printf("%s:%d\n", pair->key, pair->value);*/
 		}
 	}
 

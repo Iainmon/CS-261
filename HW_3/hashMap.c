@@ -152,7 +152,7 @@ void removeKey (struct hashMap * ht, KeyType k)
 			curr = bkt;
 			while (curr != NULL) {
 				if (EQ(curr->key, k)) {
-					// Remove key
+					/*Remove key*/
 				}
 				curr = curr->next;
 			}
