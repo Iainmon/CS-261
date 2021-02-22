@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "hashMap.h"
+# define EQ(A, B) (strcmp(A,B) == 0)
 #include "structs.h"
 #include <string.h>
 #include <assert.h>
@@ -59,10 +60,13 @@ void freeMap (struct hashMap * ht)
 			hashLink* prev;
 			prev = curr;
 			curr = curr->next;
+			free(prev->key);
 			free(prev);
 		}
+		++i;
 	}
-	free(ht);
+	free(ht->table);
+	ht->tableSize = 0;
 }
 
 void insertMap (struct hashMap * ht, KeyType k, ValueType v)
@@ -139,6 +143,7 @@ void removeKey (struct hashMap * ht, KeyType k)
 		if (bkt == lnk)
 		{
 			ht->table[idx] = lnk->next;
+			free(lnk->key);
 			free(lnk);
 			ht->count--;
 			return;
@@ -151,6 +156,7 @@ void removeKey (struct hashMap * ht, KeyType k)
 				if (curr->next == lnk)
 				{
 					curr->next = lnk->next;
+					free(lnk->key);
 					free(lnk);
 					ht->count--;
 					return;
@@ -177,6 +183,7 @@ int emptyBuckets(struct hashMap *ht)
 {  /*write this*/
 	int i;
 	int count;
+	assert(ht != NULL);
 	i = 0;
 	count = 0;
 	while (i < ht->tableSize) {
@@ -188,5 +195,6 @@ int emptyBuckets(struct hashMap *ht)
 
 float tableLoad(struct hashMap *ht)
 {  /*write this*/
+	assert(ht != NULL);
 	return (float)ht->count / (float)ht->tableSize;
 }

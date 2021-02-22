@@ -18,15 +18,16 @@ char* getWord(FILE *file); /* prototype */
 
 /****************************************/
 
+void concordinance(hashMap *ht);
+
 int main (int argc, const char * argv[]) {
     /*Write this function*/
 	FILE *fp;
-	struct hashMap* ht;
+	struct hashMap ht;
 	assert(argc > 1);
-	fp = fopen(argv[1]/* "./input.txt" */, "r");
+	fp = fopen(argv[1], "r");
 	assert(fp != NULL);
-	ht = (struct hashMap*)malloc(sizeof(struct hashMap));
-	initMap(ht, 7);
+	initMap(&ht, 7);
 	while (1) {
 		char* word;
 		word = getWord(fp);
@@ -34,39 +35,40 @@ int main (int argc, const char * argv[]) {
 			fclose(fp);
 			break;
 		}
-		/*printf("Word: %s\n", word);*/
 		{
 			struct hashLink* pair;
-			pair = link_by_key(ht, word);
+			pair = link_by_key(&ht, word);
 			if (pair == NULL) {
-				insertMap(ht, word, 1);
+				insertMap(&ht, word, 1);
 			} else {
 				pair->value++;
+				free(word);
 			}
-			pair = link_by_key(ht, word);
-			/*printf("%s:%d\n", pair->key, pair->value);*/
 		}
 	}
+	concordinance(&ht);
 
-	{
-		int i; i = 0;
-		while (i < ht->tableSize)
-		{
-			struct hashLink* curr;
-			curr = ht->table[i];
-			while (curr != NULL)
-			{
-				printf("%s: %d\n", curr->key, curr->value);
-				curr = curr->next;
-			}
-			++i;
-		}
-	}
+	freeMap(&ht);
+
 	return 0;
 }
 
-
-
+void concordinance(hashMap *ht)
+{
+	int i;
+	i = 0;
+	while (i < ht->tableSize)
+	{
+		struct hashLink *curr;
+		curr = ht->table[i];
+		while (curr != NULL)
+		{
+			printf("%s: %d\n", curr->key, curr->value);
+			curr = curr->next;
+		}
+		++i;
+	}
+}
 
 char* getWord(FILE *file)
 {
