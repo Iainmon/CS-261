@@ -17,6 +17,7 @@
 char* getWord(FILE *file); /* prototype */
 
 /****************************************/
+struct hashLink* link_by_key(struct hashMap * ht, KeyType k);
 
 void concordinance(hashMap *ht);
 
