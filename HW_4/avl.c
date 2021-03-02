@@ -3,6 +3,7 @@
 #include <assert.h>
 #include "avl.h"
 
+#define max(a,b) ((a>b)?a:b)
 
 /* Alocate and initialize AVL tree structure. */
 struct AVLTree * newAVLTree()
@@ -69,18 +70,24 @@ void setHeight (struct AVLnode * current)
 /* return balance factor value */
 int bf(struct AVLnode * current)
 {
+	if (current == 0) { return 0; }
 	return h(current->right) - h(current->left);
 }
 
 /* left-rotate subtree of current node */
 struct AVLnode * rotateLeft(struct AVLnode * current)
 {
-	struct AVLnode * newtop = current->right;
+	struct AVLnode * newtop;
+	newtop = current->right;
 
 
     /* FIX ME */
 
-
+	current->right = newtop->left;
+	newtop->left = current;
+	/*current->height = newtop->height - 1;*/
+	setHeight(current);
+	setHeight(newtop);
 
 	return newtop;
 }
@@ -92,6 +99,11 @@ struct AVLnode * rotateRight(struct AVLnode * current)
 
 
         /* FIX ME */
+	current->left = newtop->right;
+	newtop->right = current;
+	/* current->height = newtop->height - 1;*/
+	setHeight(current);
+	setHeight(newtop);
 
 	return newtop;
 }
@@ -99,13 +111,42 @@ struct AVLnode * rotateRight(struct AVLnode * current)
 /* balance subtree of current node */
 struct AVLnode * _balance(struct AVLnode * current)
 {
-	int cbf = bf(current);
-
+	int rbf;
+	rbf = bf(current);
+	
 
 
        /* FIX ME */
-
-
+	if (rbf > 1)
+	{
+		if (bf(current->right) < 0)
+		{
+			assert(current->right->left);
+			current->right = rotateRight(current->right);
+			assert(current->right);
+			current = rotateLeft(current);
+		}
+		else
+		{
+			assert(current->right);
+			current = rotateLeft(current);
+		}
+	}
+	else if (rbf < -1)
+	{
+		if (bf(current->left) > 0)
+		{
+			assert(current->left->right);
+			current->left = rotateLeft(current->left);
+			assert(current->left);
+			current = rotateRight(current);
+		}
+		else
+		{
+			assert(current->left);
+			current = rotateRight(current);
+		}
+	}
 	setHeight(current);
 	return current;
 }
@@ -114,11 +155,31 @@ struct AVLnode * _balance(struct AVLnode * current)
 struct AVLnode * AVLnodeAdd(struct	AVLnode * current, TYPE newValue)
 {
 
-
      /* FIX ME */
+	if (current == NULL)
+	{
+		struct AVLnode* new_node;
+		new_node = (struct AVLnode*)malloc(sizeof(struct AVLnode));
+		new_node->height = 0;
+		new_node->val = newValue;
+		new_node->left = NULL;
+		new_node->right = NULL;
+		return new_node;
+	}
+	/* I don't think I need to be balancing each branch after adding */
+	if (newValue <= current->val)
+	{
+		current->left = AVLnodeAdd(current->left, newValue);
+		current->left = _balance(current->left);
+	}
+	else if (newValue > current->val)
+	{
+		current->right = AVLnodeAdd(current->right, newValue);
+		current->right = _balance(current->right);
+	}
 
-
-
+	current = _balance(current);
+	return current;
 }
 
 /* add val to AVL tree */

@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <sys/time.h>
 #include "avl.h"
+#include "include.c"
 
 
 int FindMinPath(struct AVLTree *tree, TYPE *path);
@@ -14,7 +15,7 @@ The main function
   param: argv = pointer to the name (and path) of a file that the program reads for adding elements to the AVL tree
 */
 int main(int argc, char** argv) {
-
+	
 	FILE *file;
 	int len, i;
 	TYPE num; /* value to add to the tree from a file */
@@ -22,7 +23,7 @@ int main(int argc, char** argv) {
 	int pathArray[100];  /* static array with values of nodes along the min-cost path of the AVL tree. The means that the depth of the AVL tree cannot be greater than 100 which is  sufficient for our purposes*/
 
 	struct AVLTree *tree;
-	
+	printf("TO INLINE CODE BEFORE SUB\n");
 	tree = newAVLTree(); /*initialize and return an empty tree */
 	
 	file = fopen(argv[1], "r"); 	/* filename is passed in argv[1] */
@@ -77,8 +78,36 @@ Finds the minimum-cost path in an AVL tree
 int FindMinPath(struct AVLTree *tree, TYPE *path)
 {
                /* FIX ME */
-        
+    int i, lhs_diff, rhs_diff;
+	struct AVLnode *curr, *next;
+	assert(tree);
+	i = 0;
+	curr = tree->root;
+	while (curr != NULL) {
+		/* Compare values */
+		if (curr->left != NULL)
+		{ lhs_diff = abs(curr->val - curr->left->val);}
+		if (curr->right != NULL)
+		{ rhs_diff = abs(curr->val - curr->right->val);}
 
+		if (curr->right == NULL)
+		{ rhs_diff = lhs_diff + 1;}
+		if (curr->left == NULL)
+		{ lhs_diff = rhs_diff + 1;}
+
+		/* Make descision */
+		if (lhs_diff < rhs_diff) {
+			next = curr->left;
+		} else {
+			next = curr->right;
+		}
+
+		path[i] = curr->val;
+		++i;
+		curr = next;
+	}
+
+	return i;
 }
 
 
@@ -92,8 +121,25 @@ void printBreadthFirstTree(struct AVLTree *tree)
 {
    
     /* FIX ME */
+	struct AVLnode* curr;
+    struct Deque* queue;
+	assert(tree != NULL);
 
-
+    queue = init_dq();
+    push_front(queue, tree->root);
+    while (queue->size > 0) {
+        curr = pop_back(queue);
+        if (curr == NULL) { continue; }
+        /*if (EQ(curr->value, val)) {
+            free(queue);
+            printf("found %d\n", curr->value);
+            return;
+        }*/
+        printf("%d\n", curr->val);
+        push_front(queue, curr->left);
+        push_front(queue, curr->right);
+    }
+	free(queue);
 }
 
 
