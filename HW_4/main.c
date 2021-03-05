@@ -5,6 +5,7 @@
 #include "avl.h"
 #include "include.c"
 
+#define min(a,b) (a < b ? a : b)
 
 int FindMinPath(struct AVLTree *tree, TYPE *path);
 void printBreadthFirstTree(struct AVLTree *tree);
@@ -39,12 +40,13 @@ int main(int argc, char** argv) {
         printf("\nThe AVL tree has %d nodes.\n",tree->cnt);
 	
 	printf("\nPrinting the AVL tree breadth-first : \n");
-	/*printBreadthFirstTree(tree);*/
+	printBreadthFirstTree(tree);
 
 	gettimeofday(&start, NULL);
 
 	/* Find the minimum-cost path in the AVL tree*/
 	len = FindMinPath(tree, pathArray);
+	printf("root: %d\n", tree->root->val);
 	
 	gettimeofday(&stop, NULL);
 
@@ -53,7 +55,7 @@ int main(int argc, char** argv) {
 	for(i = 0; i < len; i++)
 		printf("%d ", pathArray[i]);
 	printf("\n");
-
+	printf("%d\n", tree->cnt);
 	printf("\nYour execution time to find the mincost path is %f microseconds\n", (double) (stop.tv_usec - start.tv_usec));
 
         /* Free memory allocated to the tree */
@@ -75,7 +77,83 @@ Finds the minimum-cost path in an AVL tree
        path is already allocated sufficient memory space 
        tree exists and is not NULL
 */
+int minPathRecurse(struct AVLnode *root, int par_cost, struct Deque *traversal)
+{
+	int left_min, right_min, cost, sub_tree_cost;
+	struct Deque left_traversal, right_traversal;
+	
+	if (root == NULL) {
+		return par_cost;
+	}
+	if (root->right == NULL && root->left == NULL) {
+		cost = abs(par_cost - root->val);
+		push_front(traversal, root);
+		return cost;
+	}
+	left_traversal.front = NULL;
+	right_traversal.front = NULL;
+	left_traversal.back = NULL;
+	right_traversal.back = NULL;
+	left_traversal.size = 0;
+	right_traversal.size = 0;
+	/*left_traversal = init_dq();
+	right_traversal = init_dq();*/
+
+	cost = abs(par_cost - root->val);
+	left_min = minPathRecurse(root->left, root->val, &left_traversal);
+	right_min = minPathRecurse(root->right, root->val, &right_traversal);
+	
+	if (left_min < right_min) {
+		traversal->front = left_traversal.front;
+		traversal->back = left_traversal.back;
+		traversal->size = left_traversal.size;
+		sub_tree_cost = cost + left_min;
+		/*(*traversal) = right_traversal;*/
+		/* clear right traversal */
+	} else {
+		traversal->front = right_traversal.front;
+		traversal->back = right_traversal.back;
+		traversal->size = right_traversal.size;
+		sub_tree_cost = cost + right_min;
+		/*(*traversal) = right_traversal;*/
+		/* clear left traversal */
+	}
+
+	push_front(traversal, root);
+
+	/*sub_tree_cost = cost + min(left_min, right_min);*/
+	return sub_tree_cost;
+}
 int FindMinPath(struct AVLTree *tree, TYPE *path)
+{
+	int i,j, size;
+	struct Deque *traversal;
+	struct AVLnode *curr;
+	struct List *lcurr;
+	assert(tree);
+	if (tree->root == NULL) return 0;
+
+	traversal = init_dq();
+	j = minPathRecurse(tree->root, tree->root->val, traversal);
+	size = traversal->size;
+	/*printf("dqsize: %d\n", size);
+	printf("mincost: %d\n", j);*/
+
+	/*lcurr = traversal->front;
+	while (lcurr != NULL) {
+		printf("dq val: %d \n", lcurr->value->val);
+		lcurr = lcurr->next;
+	}*/
+	i = 0;
+	while (i < size) /* (0 < traversal.size) */
+	{
+		curr = pop_back(traversal);
+		path[size - i - 1] = curr->val;
+		++i;
+	}
+	return i;
+}
+int FindMinPath1(struct AVLTree *tree, TYPE *path)
 {
                /* FIX ME */
     int i, lhs_diff, rhs_diff;

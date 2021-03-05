@@ -170,12 +170,10 @@ struct AVLnode * AVLnodeAdd(struct	AVLnode * current, TYPE newValue)
 	if (newValue <= current->val)
 	{
 		current->left = AVLnodeAdd(current->left, newValue);
-		current->left = _balance(current->left);
 	}
 	else if (newValue > current->val)
 	{
 		current->right = AVLnodeAdd(current->right, newValue);
-		current->right = _balance(current->right);
 	}
 
 	current = _balance(current);
