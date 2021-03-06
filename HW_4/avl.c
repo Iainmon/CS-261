@@ -167,11 +167,11 @@ struct AVLnode * AVLnodeAdd(struct	AVLnode * current, TYPE newValue)
 		return new_node;
 	}
 	/* I don't think I need to be balancing each branch after adding */
-	if (newValue <= current->val)
+	if (newValue < current->val)
 	{
 		current->left = AVLnodeAdd(current->left, newValue);
 	}
-	else if (newValue > current->val)
+	else if (newValue >= current->val)
 	{
 		current->right = AVLnodeAdd(current->right, newValue);
 	}
