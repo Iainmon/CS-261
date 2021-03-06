@@ -111,7 +111,7 @@ struct AVLnode * rotateRight(struct AVLnode * current)
 /* balance subtree of current node */
 struct AVLnode * _balance(struct AVLnode * current)
 {
-	int rbf;
+	int rbf, cbf;
 	rbf = bf(current);
 	
 

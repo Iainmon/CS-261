@@ -9,7 +9,7 @@
 
 int FindMinPath(struct AVLTree *tree, TYPE *path);
 void printBreadthFirstTree(struct AVLTree *tree);
-
+int findMinPath(struct AVLnode *root, TYPE *path);
 
 /* -----------------------
 The main function
@@ -47,7 +47,8 @@ int main(int argc, char** argv) {
 	gettimeofday(&start, NULL);
 
 	/* Find the minimum-cost path in the AVL tree*/
-	len = FindMinPath(tree, pathArray);
+	/*len = FindMinPath(tree, pathArray);*/
+	len = findMinPath(tree->root, pathArray);
 	
 	gettimeofday(&stop, NULL);
 
@@ -65,8 +66,74 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
+int min_cost_sum(struct AVLnode *root, int parent)
+{
+	int cost, rcost, lcost;
+	if (root == NULL) {return 0;}
+	cost = abs(parent - root->val);
+	if (root->height == 0) { return cost; }
+	lcost = min_cost_sum(root->left, root->val);
+	rcost = min_cost_sum(root->right, root->val);
+	if (lcost < rcost) {
+		return cost + lcost;
+	} else {
+		return cost + rcost;
+	}
+}
 
+void _findMinPath(struct AVLnode *sub_tree_root, int path_cost, int *parent_key, int *global_min, struct AVLnode** min_leaf)
+{
+	if (sub_tree_root == NULL) {return;}
+	path_cost += abs(*parent_key - sub_tree_root->val);
+	if (path_cost >= *global_min) { return; }
+	if (sub_tree_root->height < 1)
+	{
+		*global_min = path_cost;
+		*min_leaf = sub_tree_root;
+		return;
+	}
+	_findMinPath(sub_tree_root->left, path_cost, &sub_tree_root->val, global_min, min_leaf);
+	_findMinPath(sub_tree_root->right, path_cost, &sub_tree_root->val, global_min, min_leaf);
+}
 
+int findMinPath(struct AVLnode *root, TYPE *path)
+{
+	struct AVLnode *min_leaf, *curr;
+	int i;
+	int global_min; global_min = 99999999;
+	_findMinPath(root, 0, &root->val, &global_min, &min_leaf);
+	printf("min leaf: %d\n", min_leaf->val);
+	printf("min cost  : %d\n", global_min);
+
+	i = 0;
+	curr = root;
+	while (1) {
+		path[i] = curr->val;
+		++i;
+		/*if (min_leaf->val == curr->val && curr->height == 0) { break; }*/
+		if (min_leaf == curr) { break; }
+		/*if (min_leaf->val == curr->val) { break; }*/
+		/*if (curr->height == 0) { break; }*/
+		if (min_leaf->val <= curr->val) {
+			curr = curr->left;
+		} else {
+			curr = curr->right;
+		}
+	} 
+
+	/* verify min cost */
+	/*{
+		int expected, found, j;
+		found = 0;
+		for (j = 0; j < i-1; j++)
+		{
+			found += abs(path[j] - path[j + 1]);
+		}
+		expected = min_cost_sum(root, root->val);
+		printf("Expected: %d, Found: %d\n", expected, found);
+	}*/
+	return i;
+}
 
 typedef struct {
 	struct AVLnode *node;
@@ -85,6 +152,7 @@ Pair getMin(struct AVLnode *root, int par_cost)
 		return _cost;
 	}
 	if (root->right == NULL && root->left == NULL) {
+		assert(root->height == 0);
 		cost = abs(par_cost - root->val);
 		_cost.min_cost = cost;
 		_cost.node = root;
@@ -195,12 +263,18 @@ int FindMinPath(struct AVLTree *tree, TYPE *path)
 	assert(p.node->left == NULL);
 	assert(p.node->right == NULL);
 	
-	min_cost_test = 0; parent_cost = tree->root->val;
+	/*min_cost_test = 0; parent_cost = tree->root->val;
 	for (i = 0; i < p.i; i++) {
 		path[p.i - i - 1] = p.walk[i]->val;
 	}
 
-	return i;
+	for (j = 0; j < i; j++) {
+		min_cost_test += abs(parent_cost - path[j]);
+		parent_cost = path[j];
+	}
+	printf("TEST: mincostfound: %d mincosttest: %d\n", p.min_cost, min_cost_test);
+
+	return i;*/
 
 
 
@@ -215,7 +289,7 @@ int FindMinPath(struct AVLTree *tree, TYPE *path)
 		++i;
 		min_cost_test += abs(parent_cost - curr->val);
 		parent_cost = curr->val;
-		if (curr->val == needle->val) {break;}
+		if (curr->val == needle->val && curr->height == 0) {break;}
 		if (needle->val <= curr->val) {
 			curr = curr->left;
 		} else {
