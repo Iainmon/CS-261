@@ -111,7 +111,7 @@ struct AVLnode * rotateRight(struct AVLnode * current)
 /* balance subtree of current node */
 struct AVLnode * _balance(struct AVLnode * current)
 {
-	int rbf, cbf;
+	int rbf;
 	rbf = bf(current);
 	
 
@@ -121,14 +121,11 @@ struct AVLnode * _balance(struct AVLnode * current)
 	{
 		if (bf(current->right) < 0)
 		{
-			assert(current->right->left);
 			current->right = rotateRight(current->right);
-			assert(current->right);
 			current = rotateLeft(current);
 		}
 		else
 		{
-			assert(current->right);
 			current = rotateLeft(current);
 		}
 	}
@@ -136,14 +133,11 @@ struct AVLnode * _balance(struct AVLnode * current)
 	{
 		if (bf(current->left) > 0)
 		{
-			assert(current->left->right);
 			current->left = rotateLeft(current->left);
-			assert(current->left);
 			current = rotateRight(current);
 		}
 		else
 		{
-			assert(current->left);
 			current = rotateRight(current);
 		}
 	}
@@ -167,11 +161,11 @@ struct AVLnode * AVLnodeAdd(struct	AVLnode * current, TYPE newValue)
 		return new_node;
 	}
 	/* I don't think I need to be balancing each branch after adding */
-	if (newValue < current->val)
+	if (LT(newValue, current->val))
 	{
 		current->left = AVLnodeAdd(current->left, newValue);
 	}
-	else if (newValue >= current->val)
+	else
 	{
 		current->right = AVLnodeAdd(current->right, newValue);
 	}
