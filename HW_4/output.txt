@@ -1,4 +1,3 @@
-TO INLINE CODE BEFORE SUB
 
 The AVL tree has 10000 nodes.
 
@@ -10003,13 +10002,9 @@ Printing the AVL tree breadth-first :
 9980
 9982
 9999
-root: 4095
-mincost: 4095
-mincostleaf: 6142
 
 
 The minimum-cost path has 13 nodes printed top-down from the root to the leaf: 
-4095 6143 5119 5631 5887 6015 6079 6111 6127 6135 6139 6141 6142 
-The tree has 10000 nodes.
+4095 2047 1023 511 255 127 63 31 15 7 3 1 0 
 
-Your execution time to find the mincost path is 166.000000 microseconds
+Your execution time to find the mincost path is 164.000000 microseconds
