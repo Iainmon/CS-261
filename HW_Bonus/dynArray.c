@@ -1,6 +1,7 @@
 /*	dynArray.c: Dynamic Array implementation. */
 #include <assert.h>
 #include <stdlib.h>
+#define TYPE int
 #include "dynArray.h"
 
 /* ************************************************************************
@@ -17,9 +18,9 @@
 */
 void initDynArr(DynArr *v, int capacity)
 {
-	v->data = (TYPE *) malloc(sizeof(TYPE) * capacity);
+	v->data = (TYPE *)malloc(sizeof(TYPE) * capacity);
 	assert(v->data != 0);
-	
+
 	v->size = 0;
 	v->capacity = capacity;
 }
@@ -32,11 +33,11 @@ void initDynArr(DynArr *v, int capacity)
 	ret:	a non-null pointer to a dynArr of cap capacity
 			and 0 elements in it.		
 */
-DynArr* newDynArr(int cap)
+DynArr *newDynArr(int cap)
 {
-	DynArr *r = (DynArr *)malloc(sizeof( DynArr));
+	DynArr *r = (DynArr *)malloc(sizeof(DynArr));
 	assert(r != 0);
-	initDynArr(r,cap);
+	initDynArr(r, cap);
 	return r;
 }
 
@@ -50,10 +51,10 @@ DynArr* newDynArr(int cap)
 */
 void freeDynArr(DynArr *v)
 {
-	if(v->data != 0)
+	if (v->data != 0)
 	{
-		free(v->data); 	/* free the space on the heap */
-		v->data = 0;   	/* make it point to null */
+		free(v->data); /* free the space on the heap */
+		v->data = 0;   /* make it point to null */
 	}
 	v->size = 0;
 	v->capacity = 0;
@@ -82,15 +83,15 @@ void deleteDynArr(DynArr *v)
 void _dynArrSetCapacity(DynArr *v, int newCap)
 {
 	int i;
-	
+
 	/* Create a new underlying array */
-	TYPE *newData = (TYPE*)malloc(sizeof(TYPE)*newCap);
+	TYPE *newData = (TYPE *)malloc(sizeof(TYPE) * newCap);
 	assert(newData != 0);
-	
+
 	/* copy elements to new data array */
-	for(i = 0; i < v->size; i++)
+	for (i = 0; i < v->size; i++)
 		newData[i] = v->data[i];
-	
+
 	/* Delete the old underlying array */
 	freeDynArr(v);
 	/* update capacity and size and data */
@@ -123,9 +124,9 @@ int sizeDynArr(DynArr *v)
 void addDynArr(DynArr *v, TYPE val)
 {
 	/* Check to see if a resize is necessary */
-	if(v->size >= v->capacity)
+	if (v->size >= v->capacity)
 		_dynArrSetCapacity(v, 2 * v->capacity);
-	
+
 	v->data[v->size] = val;
 	v->size++;
 }
@@ -144,7 +145,7 @@ TYPE getDynArr(DynArr *v, int pos)
 {
 	assert(pos < v->size);
 	assert(pos >= 0);
-	
+
 	return v->data[pos];
 }
 
@@ -162,7 +163,7 @@ TYPE getDynArr(DynArr *v, int pos)
 void putDynArr(DynArr *v, int pos, TYPE val)
 {
 	assert(pos < v->size);
-	
+
 	v->data[pos] = val;
 }
 
@@ -175,13 +176,13 @@ void putDynArr(DynArr *v, int pos, TYPE val)
 	pre:	i, j >= 0 and i,j < size of the dynamic array
 	post:	index i now holds the value at j and index j now holds the value at i
 */
-void swapDynArr(DynArr *v, int i, int  j)
+void swapDynArr(DynArr *v, int i, int j)
 {
-	TYPE  temp;
-	
+	TYPE temp;
+
 	assert(i < v->size);
 	assert(j < v->size);
-	
+
 	temp = v->data[i];
 	v->data[i] = v->data[j];
 	v->data[j] = temp;
@@ -202,10 +203,10 @@ void removeAtDynArr(DynArr *v, int idx)
 {
 	int i;
 
-	for(i = idx; i < v->size-1; ++i)
-		v->data[i] = v->data[i+1];
+	for (i = idx; i < v->size - 1; ++i)
+		v->data[i] = v->data[i + 1];
 
-	if(idx >= 0 && idx < v->size)
+	if (idx >= 0 && idx < v->size)
 		--v->size;
 }
 
@@ -219,13 +220,13 @@ void removeAtDynArr(DynArr *v, int idx)
 */
 void copyDynArr(DynArr *source, DynArr *destination)
 {
-  	int i;
+	int i;
 	assert(source->size > 0);
 	initDynArr(destination, source->capacity);
 	/* copy elements to destination array */
-	for(i = 0; i < source->size; i++)
+	for (i = 0; i < source->size; i++)
 		destination->data[i] = source->data[i];
-	
+
 	destination->size = source->size;
 }
 
@@ -247,11 +248,11 @@ void _adjustHeap(DynArr *heap, int max, int pos);
 */
 int _smallerIndexHeap(DynArr *heap, int i, int j)
 {
-  	assert(i < sizeDynArr(heap));
-  	assert(j < sizeDynArr(heap));
-  	if (compare(getDynArr(heap, i), getDynArr(heap, j)) == -1)
+	assert(i < sizeDynArr(heap));
+	assert(j < sizeDynArr(heap));
+	if (compare(getDynArr(heap, i), getDynArr(heap, j)) == -1)
 		return i;
-  	else
+	else
 		return j;
 }
 
@@ -264,9 +265,12 @@ int _smallerIndexHeap(DynArr *heap, int i, int j)
 */
 TYPE getMinHeap(DynArr *heap)
 {
-  	/* FIXME */
-  	TYPE temp;
-  	return temp;
+	/* FIXME */
+	TYPE temp;
+	assert(heap);
+	assert(heap->size > 0);
+	temp = heap->data[0];
+	return temp;
 }
 
 /*	Add a node to the heap
@@ -278,7 +282,10 @@ TYPE getMinHeap(DynArr *heap)
 */
 void addHeap(DynArr *heap, TYPE node)
 {
-  	/* FIXME */
+	/* FIXME */
+	assert(heap);
+	addDynArr(heap, node);
+	_adjustHeap(heap, heap->size, heap->size - 1);
 }
 
 /*	Adjust heap to maintain heap property
@@ -291,7 +298,39 @@ void addHeap(DynArr *heap, TYPE node)
 */
 void _adjustHeap(DynArr *heap, int max, int pos)
 {
-  	/* FIXME */
+	/* FIXME */
+	/*int parent;
+	assert(heap);
+
+	parent = (pos - 1) / 2;
+	if (heap->data[parent] > 0)
+	{
+		if (heap->data[pos] < heap->data[parent])
+		{
+			swapDynArr(heap, parent, pos);
+			_adjustHeap(heap, max, parent);
+		}
+	}*/
+	int largest, right, left;
+	assert(heap);
+	largest = pos;
+	left = 2 * pos + 1;
+	right = 2 * pos + 2;
+
+	if (left < max && heap->data[left] > heap->data[largest])
+	{
+		largest = left;
+	}
+	if (right < max && heap->data[right] > heap->data[largest])
+	{
+		largest = right;
+	}
+
+	if (largest != pos)
+	{
+		swapDynArr(heap, largest, pos);
+		_adjustHeap(heap, max, largest);
+	}
 }
 
 /*	Remove the first node, which has the max priority (i.e., min value), 
@@ -303,9 +342,14 @@ void _adjustHeap(DynArr *heap, int max, int pos)
 */
 void removeMinHeap(DynArr *heap)
 {
-  	/* FIXME */
-}
+	/* FIXME */
+	int temp;
+	assert(heap);
+	temp = heap->data[heap->size - 1];
+	heap->size--;
+	heap->data[0] = temp;
 
+}
 
 /* builds a heap from an arbitrary dynArray
  
@@ -317,6 +361,16 @@ void removeMinHeap(DynArr *heap)
 void _buildHeap(DynArr *heap)
 {
 	/* FIXME */
+	int i, size;
+	assert(heap);
+	size = heap->size;
+
+	i = heap->size;
+	while (i > -1)
+	{
+		_adjustHeap(heap, size, i);
+		--i;
+	}
 	
 }
 /* 
@@ -330,4 +384,5 @@ void _buildHeap(DynArr *heap)
 void sortHeap(DynArr *heap)
 {
 	/*FIXME*/
+	
 }
