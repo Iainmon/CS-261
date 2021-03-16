@@ -53,7 +53,7 @@ void adjust_heap_bottom_to_top(struct Heap *heap, int i)
 void adjust_heap_top_to_bottom(struct Heap *heap, int i)
 {
     TYPE temp;
-    int right, left, largest;
+    int right, left, smallest;
     assert(heap);
     smallest = i;
     left = (i * 2) + 1;
